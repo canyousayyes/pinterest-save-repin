@@ -16,7 +16,7 @@ p.login('user_name_or_email', 'password')
     // repin(board_id, source_pin_url)
     p.repin('550494823140995277', 'https://www.pinterest.com/pin/35114072071975952/');
 })
-then(function (repin_id) {
+.then(function (repin_id) {
     console.log(repin_id);
 });
 ```
