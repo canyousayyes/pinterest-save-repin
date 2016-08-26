@@ -2,6 +2,8 @@
 
 let rp = require('request-promise');
 let Cookie = require('cookie');
+let Entities = require('html-entities').AllHtmlEntities;
+let entites = new Entities();
 
 function Pinterest() {
     this.jar = rp.jar();
@@ -131,7 +133,7 @@ Pinterest.prototype.repin = function (board_id, pin_url) {
                     'options': {
                         'pin_id': pin_id,
                         'is_buyable_pin': false,
-                        'description': description,
+                        'description': entites.decode(description),
                         'link': link,
                         'is_video': false,
                         'board_id': board_id
