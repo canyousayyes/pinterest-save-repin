@@ -143,7 +143,7 @@ Pinterest.prototype.repin = function (board_id, pin_url) {
                 'module_path': 'App>ModalManager>Modal>PinCreate>PinCreateBoardPicker>BoardPicker>SelectList(view_type=pinCreate, selected_section_index=undefined, selected_item_index=undefined, highlight_matched_text=true, suppress_hover_events=undefined, scroll_selected_item_into_view=true, select_first_item_after_update=false, item_module=[object Object])'
             },
             jar: self.jar,
-            gzip: true
+            gzip: true,
             followRedirect: true
         };
         return rp(options);
