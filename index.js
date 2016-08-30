@@ -1,9 +1,9 @@
 'use strict';
 
-let rp = require('request-promise');
-let Cookie = require('cookie');
-let Entities = require('html-entities').AllHtmlEntities;
-let entites = new Entities();
+var rp = require('request-promise');
+var Cookie = require('cookie');
+var Entities = require('html-entities').AllHtmlEntities;
+var entites = new Entities();
 
 function Pinterest() {
     this.jar = rp.jar();
@@ -17,9 +17,9 @@ function Pinterest() {
  * @return {Promise}                  Return a Promise when success.
  */
 Pinterest.prototype.login = function (username_or_email, password) {
-    let login_url = 'https://www.pinterest.com/resource/UserSessionResource/create/';
-    let self = this;
-    let options = {
+    var login_url = 'https://www.pinterest.com/resource/UserSessionResource/create/';
+    var self = this;
+    var options = {
         url: login_url,
         method: 'POST',
         headers: {
@@ -56,13 +56,13 @@ Pinterest.prototype.login = function (username_or_email, password) {
 
     return rp(options)
     .then(function (response) {
-        let response_obj = JSON.parse(response);
+        var response_obj = JSON.parse(response);
         if (response_obj.resource_response.error) {
             throw new Error(response_obj.resource_response.error);
         }
 
-        let cookie_string = self.jar.getCookieString(login_url);
-        let cookie_obj = Cookie.parse(cookie_string);
+        var cookie_string = self.jar.getCookieString(login_url);
+        var cookie_obj = Cookie.parse(cookie_string);
         if (cookie_obj.csrftoken) {
             self.csrftoken = cookie_obj.csrftoken;
             return true;
@@ -79,36 +79,36 @@ Pinterest.prototype.login = function (username_or_email, password) {
  * @return {Promise}          Promise with the resolved value of the repin ID.
  */
 Pinterest.prototype.repin = function (board_id, pin_url) {
-    let self = this;
-    let repin_url = 'https://www.pinterest.com/resource/RepinResource/create/';
+    var self = this;
+    var repin_url = 'https://www.pinterest.com/resource/RepinResource/create/';
 
     // Validate pin_url
-    let pin_id_matches = pin_url.match(/^https?:\/\/www\.pinterest\.com\/pin\/(\d+)/);
+    var pin_id_matches = pin_url.match(/^https?:\/\/www\.pinterest\.com\/pin\/(\d+)/);
     if (!pin_id_matches || !pin_id_matches[1]) {
         throw new Error('pin_url is not in the form of https://www.pinterest.com/pin/<pin_id>');
     }
 
     board_id = board_id.toString();
-    let pin_id = pin_id_matches[1];
-    let source_url = `/pin/${pin_id}/`;
-    let description = '';
-    let link = '';
+    var pin_id = pin_id_matches[1];
+    var source_url = '/pin/' + pin_id + '/';
+    var description = '';
+    var link = '';
 
     return rp(pin_url)
     .then(function (response) {
         // Grep the description and link from source pin_url
-        let description_matches = response.match(/<meta\s+property=\"og:description\"\s+name=\"og:description\"\s+content=\"(.*?)\"\s+data-app>/);
+        var description_matches = response.match(/<meta\s+property=\"og:description\"\s+name=\"og:description\"\s+content=\"(.*?)\"\s+data-app>/);
         if (description_matches && description_matches[1]) {
             description = description_matches[1];
         }
 
-        let link_matches = response.match(/<meta\s+property=\"og:description\"\s+name=\"og:description\"\s+content=\"(.*?)\"\s+data-app>/);
+        var link_matches = response.match(/<meta\s+property=\"og:description\"\s+name=\"og:description\"\s+content=\"(.*?)\"\s+data-app>/);
         if (link_matches && link_matches[1]) {
             link = link_matches[1];
         }
     })
     .then(function () {
-        let options = {
+        var options = {
             url: repin_url,
             method: 'POST',
             headers: {
@@ -149,7 +149,7 @@ Pinterest.prototype.repin = function (board_id, pin_url) {
         return rp(options);
     })
     .then(function (response) {
-        let response_obj = JSON.parse(response);
+        var response_obj = JSON.parse(response);
         if (response_obj.resource_response.error) {
             throw new Error(response_obj.resource_response.error);
         }
